@@ -1,0 +1,1014 @@
+1) Implement the binary search algorithm regarded as a fast search algorithm
+with run-time complexity of Ο(log n) in comparison to the Linear Search.
+
+#include <iostream>
+using namespace std;
+
+int binarySearch(int arr[], int n, int key) {
+    int low = 0, high = n - 1;
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+
+        if (arr[mid] == key)
+            return mid;               
+        else if (arr[mid] < key)
+            low = mid + 1;            
+        else
+            high = mid - 1;           
+    }
+
+    return -1; 
+}
+
+int main() {
+    int n, key;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int arr[n];
+    cout << "Enter elements (sorted): ";
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    cout << "Enter key to search: ";
+    cin >> key;
+
+    int result = binarySearch(arr, n, key);
+
+    if (result != -1)
+        cout << "Key found at index: " << result << endl;
+    else
+        cout << "Key not found" << endl;
+
+    return 0;
+}
+
+
+2) Bubble Sort is the simplest sorting algorithm that works by repeatedly
+swapping the adjacent elements if they are in the wrong order. Code the Bubble sort
+with the following elements:
+64  34  25  12  22  11  90
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[] = {64, 34, 25, 12, 22, 11, 90};
+    int n = 7;
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+        
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+
+    return 0;
+}
+
+
+3) Design the Logic to Find a Missing Number in a Sorted Array. Given an array of
+n-1 distinct integers in the range of 1 to n, find the missing number in it in a Sorted
+Array
+(a) Linear time
+(b) Using binary search
+
+(a) Linear Time Logic – O(n)
+
+#include <iostream>
+using namespace std;
+
+int findMissingLinear(int arr[], int n) {
+
+    for (int i = 0; i < n - 1; i++) {
+        if (arr[i] != i + 1) {
+            return i + 1;  
+        }
+    }
+    return n;
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 6, 7, 8};  
+    int n = 8;                          
+    int missing = findMissingLinear(arr, n);
+    cout << "Missing number (Linear): " << missing << endl;
+    return 0;
+}
+
+
+(b) Binary Search Logic – O(log n)
+
+#include <iostream>
+using namespace std;
+
+int findMissingBinary(int arr[], int n) {
+    int low = 0, high = n - 2; 
+
+    while (low <= high) {
+        int mid = (low + high) / 2;
+
+        if (arr[mid] == mid + 1) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return low + 1;
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 6, 7, 8};  
+    int n = 8;                          
+
+    cout << "Missing number (Binary Search): " 
+    cout << findMissingBinary(arr, n) << endl;
+
+    return 0;
+}
+
+
+4) String Related Programs
+(a) Write a program to concatenate one string to another string.
+(b) Write a program to reverse a string.
+(c) Write a program to delete all the vowels from the string.
+(d) Write a program to sort the strings in alphabetical order.
+(e) Write a program to convert a character from uppercase to lowercase.
+
+(a) Write a program to concatenate one string to another string.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    char str1[100], str2[100];
+
+    cout << "Enter first string: ";
+    cin >> str1;
+
+    cout << "Enter second string: ";
+    cin >> str2;
+
+    int i = 0, j = 0;
+
+    while (str1[i] != '\0') i++;   
+
+    while (str2[j] != '\0') {
+        str1[i] = str2[j];
+        i++;
+        j++;
+    }
+    str1[i] = '\0';
+
+    cout << "Concatenated String: " << str1;
+    return 0;
+}
+
+(b) Write a program to reverse a string.
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+    char str[100];
+
+    cout << "Enter a string: ";
+    cin >> str;
+
+    int n = strlen(str);
+
+    for (int i = 0, j = n - 1; i < j; i++, j--) {
+        char temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+
+    cout << "Reversed string: " << str;
+    return 0;
+}
+
+(c) Write a program to delete all the vowels from the string.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    char str[100], result[100];
+    cout << "Enter a string: ";
+    cin >> str;
+
+    int j = 0;
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        char ch = str[i];
+       
+        if (ch!='a' && ch!='e' && ch!='i' && ch!='o' && ch!='u' &&
+            ch!='A' && ch!='E' && ch!='I' && ch!='O' && ch!='U') {
+            result[j++] = ch;
+        }
+    }
+    result[j] = '\0';
+
+    cout << "String without vowels: " << result;
+    return 0;
+}
+
+(d) Write a program to sort the strings in alphabetical order.
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+    int n;
+    cout << "How many strings? ";
+    cin >> n;
+
+    char str[20][50];
+
+    cout << "Enter strings:\n";
+    for (int i = 0; i < n; i++)
+        cin >> str[i];
+
+    // Bubble sort by strcmp
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (strcmp(str[j], str[j + 1]) > 0) {
+                char temp[50];
+                strcpy(temp, str[j]);
+                strcpy(str[j], str[j + 1]);
+                strcpy(str[j + 1], temp);
+            }
+        }
+    }
+
+    cout << "\nStrings in alphabetical order:\n";
+    for (int i = 0; i < n; i++)
+        cout << str[i] << endl;
+
+    return 0;
+}
+
+(e) Write a program to convert a character from uppercase to lowercase.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    char ch;
+
+    cout << "Enter uppercase character: ";
+    cin >> ch;
+
+    if (ch >= 'A' && ch <= 'Z') {
+        ch = ch + 32;  // ASCII conversion
+        cout << "Lowercase: " << ch;
+    } else {
+        cout << "Not an uppercase letter.";
+    }
+
+    return 0;
+}
+
+
+5) Space required to store any two-dimensional array is 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜ƒ 𝑟𝑜𝑤𝑠 × 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜ƒ
+𝑐𝑜𝑙𝑢𝑚𝑛𝑠. Assuming an array is used to store elements of the following matrices,
+implement an efficient way that reduces the space requirement.
+(a) Diagonal Matrix.
+(b) Tri-diagonal Matrix.
+(c) Lower triangular Matrix.
+(d) Upper triangular Matrix.
+(e) Symmetric Matrix
+
+
+#include <iostream>
+using namespace std;
+
+class DiagonalMatrix {
+    int *D;
+    int n;
+public:
+    DiagonalMatrix(int n) {
+        this->n = n;
+        D = new int[n];
+        for (int i = 0; i < n; i++)
+            D[i] = 0;
+    }
+
+    void set(int i, int j, int x) {
+        if (i == j && i >= 0 && i < n)
+            D[i] = x;
+    }
+
+    int get(int i, int j) {
+        if (i == j && i >= 0 && i < n)
+            return D[i];
+        return 0;
+    }
+
+    void display() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                cout << get(i, j) << " ";
+            cout << endl;
+        }
+    }
+
+    ~DiagonalMatrix() {
+        delete [] D;
+    }
+};
+
+
+class TriDiagonalMatrix {
+    int *T;
+    int n;   // n x n
+public:
+    TriDiagonalMatrix(int n) {
+        this->n = n;
+        T = new int[3*n - 2];
+        for (int i = 0; i < 3*n - 2; i++)
+            T[i] = 0;
+    }
+
+    void set(int i, int j, int x) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return;
+
+        if (i == j) {
+            T[i] = x;                      
+        } else if (i == j + 1) {
+            T[n + j] = x;                  
+        } else if (j == i + 1) {
+            T[2*n - 1 + i] = x;            
+        }
+        
+    }
+
+    int get(int i, int j) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return 0;
+
+        if (i == j)
+            return T[i];
+        else if (i == j + 1)
+            return T[n + j];
+        else if (j == i + 1)
+            return T[2*n - 1 + i];
+        else
+            return 0;
+    }
+
+    void display() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                cout << get(i, j) << " ";
+            cout << endl;
+        }
+    }
+
+    ~TriDiagonalMatrix() {
+        delete [] T;
+    }
+};
+
+class LowerTriangularMatrix {
+    int *L;
+    int n;
+public:
+    LowerTriangularMatrix(int n) {
+        this->n = n;
+        L = new int[n*(n+1)/2];
+        for (int i = 0; i < n*(n+1)/2; i++)
+            L[i] = 0;
+    }
+
+    int index(int i, int j) {
+        return i*(i+1)/2 + j;
+    }
+
+    void set(int i, int j, int x) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return;
+
+        if (i >= j) {
+            L[index(i, j)] = x;
+        }
+    }
+
+    int get(int i, int j) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return 0;
+
+        if (i >= j)
+            return L[index(i, j)];
+        else
+            return 0;
+    }
+
+    void display() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                cout << get(i, j) << " ";
+            cout << endl;
+        }
+    }
+
+    ~LowerTriangularMatrix() {
+        delete [] L;
+    }
+};
+
+class UpperTriangularMatrix {
+    int *U;
+    int n;
+public:
+    UpperTriangularMatrix(int n) {
+        this->n = n;
+        U = new int[n*(n+1)/2];
+        for (int i = 0; i < n*(n+1)/2; i++)
+            U[i] = 0;
+    }
+
+    int index(int i, int j) {
+        return i*n - (i*(i-1))/2 + (j - i);
+    }
+
+    void set(int i, int j, int x) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return;
+
+        if (i <= j) {
+            U[index(i, j)] = x;
+        }
+    }
+
+    int get(int i, int j) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return 0;
+
+        if (i <= j)
+            return U[index(i, j)];
+        else
+            return 0;
+    }
+
+    void display() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                cout << get(i, j) << " ";
+            cout << endl;
+        }
+    }
+
+    ~UpperTriangularMatrix() {
+        delete [] U;
+    }
+};
+
+class SymmetricMatrix {
+    int *S;
+    int n;
+public:
+    SymmetricMatrix(int n) {
+        this->n = n;
+        S = new int[n*(n+1)/2];
+        for (int i = 0; i < n*(n+1)/2; i++)
+            S[i] = 0;
+    }
+
+    int indexLower(int i, int j) {
+        return i*(i+1)/2 + j;
+    }
+
+    void set(int i, int j, int x) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return;
+
+        if (i >= j)
+            S[indexLower(i, j)] = x;
+        else
+            S[indexLower(j, i)] = x;   
+    }
+
+    int get(int i, int j) {
+        if (i < 0 || j < 0 || i >= n || j >= n)
+            return 0;
+
+        if (i >= j)
+            return S[indexLower(i, j)];
+        else
+            return S[indexLower(j, i)];
+    }
+
+    void display() {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                cout << get(i, j) << " ";
+            cout << endl;
+        }
+    }
+
+    ~SymmetricMatrix() {
+        delete [] S;
+    }
+};
+
+void testDiagonal() {
+    int n;
+    cout << "\nEnter size of Diagonal Matrix (n x n): ";
+    cin >> n;
+
+    DiagonalMatrix m(n);
+
+    int choice;
+    do {
+        cout << "\n--- Diagonal Matrix Menu ---\n";
+        cout << "1. Set element\n";
+        cout << "2. Get element\n";
+        cout << "3. Display matrix\n";
+        cout << "4. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int i, j, x;
+            cout << "Enter i j value (0-based): ";
+            cin >> i >> j >> x;
+            m.set(i, j, x);
+        } else if (choice == 2) {
+            int i, j;
+            cout << "Enter i j (0-based): ";
+            cin >> i >> j;
+            cout << "A[" << i << "][" << j << "] = " << m.get(i, j) << endl;
+        } else if (choice == 3) {
+            cout << "Matrix:\n";
+            m.display();
+        }
+    } while (choice != 4);
+}
+
+void testTriDiagonal() {
+    int n;
+    cout << "\nEnter size of Tri-diagonal Matrix (n x n): ";
+    cin >> n;
+
+    TriDiagonalMatrix m(n);
+
+    int choice;
+    do {
+        cout << "\n--- Tri-diagonal Matrix Menu ---\n";
+        cout << "1. Set element\n";
+        cout << "2. Get element\n";
+        cout << "3. Display matrix\n";
+        cout << "4. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int i, j, x;
+            cout << "Enter i j value (0-based): ";
+            cin >> i >> j >> x;
+            m.set(i, j, x);
+        } else if (choice == 2) {
+            int i, j;
+            cout << "Enter i j (0-based): ";
+            cin >> i >> j;
+            cout << "A[" << i << "][" << j << "] = " << m.get(i, j) << endl;
+        } else if (choice == 3) {
+            cout << "Matrix:\n";
+            m.display();
+        }
+    } while (choice != 4);
+}
+
+void testLowerTriangular() {
+    int n;
+    cout << "\nEnter size of Lower Triangular Matrix (n x n): ";
+    cin >> n;
+
+    LowerTriangularMatrix m(n);
+
+    int choice;
+    do {
+        cout << "\n--- Lower Triangular Matrix Menu ---\n";
+        cout << "1. Set element\n";
+        cout << "2. Get element\n";
+        cout << "3. Display matrix\n";
+        cout << "4. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int i, j, x;
+            cout << "Enter i j value (0-based, i >= j): ";
+            cin >> i >> j >> x;
+            m.set(i, j, x);
+        } else if (choice == 2) {
+            int i, j;
+            cout << "Enter i j (0-based): ";
+            cin >> i >> j;
+            cout << "A[" << i << "][" << j << "] = " << m.get(i, j) << endl;
+        } else if (choice == 3) {
+            cout << "Matrix:\n";
+            m.display();
+        }
+    } while (choice != 4);
+}
+
+void testUpperTriangular() {
+    int n;
+    cout << "\nEnter size of Upper Triangular Matrix (n x n): ";
+    cin >> n;
+
+    UpperTriangularMatrix m(n);
+
+    int choice;
+    do {
+        cout << "\n--- Upper Triangular Matrix Menu ---\n";
+        cout << "1. Set element\n";
+        cout << "2. Get element\n";
+        cout << "3. Display matrix\n";
+        cout << "4. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int i, j, x;
+            cout << "Enter i j value (0-based, i <= j): ";
+            cin >> i >> j >> x;
+            m.set(i, j, x);
+        } else if (choice == 2) {
+            int i, j;
+            cout << "Enter i j (0-based): ";
+            cin >> i >> j;
+            cout << "A[" << i << "][" << j << "] = " << m.get(i, j) << endl;
+        } else if (choice == 3) {
+            cout << "Matrix:\n";
+            m.display();
+        }
+    } while (choice != 4);
+}
+
+void testSymmetric() {
+    int n;
+    cout << "\nEnter size of Symmetric Matrix (n x n): ";
+    cin >> n;
+
+    SymmetricMatrix m(n);
+
+    int choice;
+    do {
+        cout << "\n--- Symmetric Matrix Menu ---\n";
+        cout << "1. Set element\n";
+        cout << "2. Get element\n";
+        cout << "3. Display matrix\n";
+        cout << "4. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int i, j, x;
+            cout << "Enter i j value (0-based): ";
+            cin >> i >> j >> x;
+            m.set(i, j, x);
+        } else if (choice == 2) {
+            int i, j;
+            cout << "Enter i j (0-based): ";
+            cin >> i >> j;
+            cout << "A[" << i << "][" << j << "] = " << m.get(i, j) << endl;
+        } else if (choice == 3) {
+            cout << "Matrix:\n";
+            m.display();
+        }
+    } while (choice != 4);
+}
+
+int main() {
+    int choice;
+    do {
+        cout << "\n========== Special Matrices Menu ==========\n";
+        cout << "1. Diagonal Matrix\n";
+        cout << "2. Tri-diagonal Matrix\n";
+        cout << "3. Lower Triangular Matrix\n";
+        cout << "4. Upper Triangular Matrix\n";
+        cout << "5. Symmetric Matrix\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: testDiagonal(); break;
+            case 2: testTriDiagonal(); break;
+            case 3: testLowerTriangular(); break;
+            case 4: testUpperTriangular(); break;
+            case 5: testSymmetric(); break;
+            case 6: cout << "Exiting...\n"; break;
+            default: cout << "Invalid choice!\n";
+        }
+
+    } while (choice != 6);
+
+    return 0;
+}
+
+
+6) Write a program to implement the following operations on a Sparse Matrix,
+assuming the matrix is represented using a triplet.
+(a) Transpose of a matrix.
+(b) Addition of two matrices.
+(c) Multiplication of two matrices.
+
+#include <iostream>
+using namespace std;
+
+const int MAX = 100;   
+
+struct Term {
+    int row, col, val;
+};
+
+void readSparse(Term a[]) {
+    int rows, cols, t;
+    cout << "Enter number of rows, columns and non-zero elements: ";
+    cin >> rows >> cols >> t;
+
+    a[0].row = rows;
+    a[0].col = cols;
+    a[0].val = t;
+
+    cout << "Enter row, column and value for each non-zero element (0-based indices):\n";
+    for (int i = 1; i <= t; i++) {
+        cin >> a[i].row >> a[i].col >> a[i].val;
+    }
+}
+
+void printSparse(Term a[]) {
+    cout << "Rows = " << a[0].row << ", Cols = " << a[0].col
+         << ", Non-zero = " << a[0].val << endl;
+    cout << "Row  Col  Val\n";
+    for (int i = 1; i <= a[0].val; i++) {
+        cout << a[i].row << "    " << a[i].col << "    " << a[i].val << endl;
+    }
+}
+
+
+void transpose(Term a[], Term b[]) {
+    int rows = a[0].row;
+    int cols = a[0].col;
+    int t = a[0].val;
+
+    b[0].row = cols;
+    b[0].col = rows;
+    b[0].val = t;
+
+    int k = 1;
+    for (int c = 0; c < cols; c++) {
+        for (int i = 1; i <= t; i++) {
+            if (a[i].col == c) {
+                b[k].row = a[i].col;
+                b[k].col = a[i].row;
+                b[k].val = a[i].val;
+                k++;
+            }
+        }
+    }
+}
+
+
+void addSparse(Term a[], Term b[], Term c[]) {
+    if (a[0].row != b[0].row || a[0].col != b[0].col) {
+        cout << "Matrices cannot be added (dimensions not equal).\n";
+        c[0].val = 0;
+        return;
+    }
+
+    c[0].row = a[0].row;
+    c[0].col = a[0].col;
+
+    int t1 = a[0].val;
+    int t2 = b[0].val;
+    int i = 1, j = 1, k = 1;
+
+    while (i <= t1 && j <= t2) {
+        // Compare positions (row, col)
+        if (a[i].row < b[j].row ||
+           (a[i].row == b[j].row && a[i].col < b[j].col)) {
+            c[k++] = a[i++];
+        } else if (b[j].row < a[i].row ||
+                  (b[j].row == a[i].row && b[j].col < a[i].col)) {
+            c[k++] = b[j++];
+        } else {
+            // same position
+            int sum = a[i].val + b[j].val;
+            if (sum != 0) {
+                c[k].row = a[i].row;
+                c[k].col = a[i].col;
+                c[k].val = sum;
+                k++;
+            }
+            i++;
+            j++;
+        }
+    }
+
+    
+    while (i <= t1) c[k++] = a[i++];
+    while (j <= t2) c[k++] = b[j++];
+
+    c[0].val = k - 1;
+}
+
+void multiplySparse(Term a[], Term b[], Term c[]) {
+    if (a[0].col != b[0].row) {
+        cout << "Matrices cannot be multiplied (A.cols != B.rows).\n";
+        c[0].val = 0;
+        return;
+    }
+
+    c[0].row = a[0].row;
+    c[0].col = b[0].col;
+    c[0].val = 0;
+
+    int t1 = a[0].val;
+    int t2 = b[0].val;
+    int k = 1;  
+
+
+    for (int i = 1; i <= t1; i++) {
+        for (int j = 1; j <= t2; j++) {
+            if (a[i].col == b[j].row) {
+                int r = a[i].row;
+                int col = b[j].col;
+                int product = a[i].val * b[j].val;
+
+                int pos;
+                for (pos = 1; pos < k; pos++) {
+                    if (c[pos].row == r && c[pos].col == col) {
+                        c[pos].val += product;
+                        break;
+                    }
+                }
+
+                if (pos == k) {
+                    c[k].row = r;
+                    c[k].col = col;
+                    c[k].val = product;
+                    k++;
+                }
+            }
+        }
+    }
+
+    c[0].val = k - 1;
+}
+
+int main() {
+    Term A[MAX], B[MAX], C[MAX];
+    int choice;
+
+    do {
+        cout << "\n===== Sparse Matrix (Triplet Representation) =====\n";
+        cout << "1. Read Matrix A\n";
+        cout << "2. Read Matrix B\n";
+        cout << "3. Display Matrix A\n";
+        cout << "4. Display Matrix B\n";
+        cout << "5. Transpose of A\n";
+        cout << "6. Add A + B\n";
+        cout << "7. Multiply A * B\n";
+        cout << "8. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "\n--- Enter Matrix A ---\n";
+                readSparse(A);
+                break;
+
+            case 2:
+                cout << "\n--- Enter Matrix B ---\n";
+                readSparse(B);
+                break;
+
+            case 3:
+                cout << "\n--- Matrix A (Triplet Form) ---\n";
+                printSparse(A);
+                break;
+
+            case 4:
+                cout << "\n--- Matrix B (Triplet Form) ---\n";
+                printSparse(B);
+                break;
+
+            case 5:
+                cout << "\n--- Transpose of A ---\n";
+                transpose(A, C);
+                printSparse(C);
+                break;
+
+            case 6:
+                cout << "\n--- A + B ---\n";
+                addSparse(A, B, C);
+                if (C[0].val > 0)
+                    printSparse(C);
+                break;
+
+            case 7:
+                cout << "\n--- A * B ---\n";
+                multiplySparse(A, B, C);
+                if (C[0].val > 0)
+                    printSparse(C);
+                break;
+
+            case 8:
+                cout << "Exiting...\n";
+                break;
+
+            default:
+                cout << "Invalid choice!\n";
+        }
+
+    } while (choice != 8);
+
+    return 0;
+}
+
+
+7) Let A[1 …. n] be an array of n real numbers. A pair (A[i], A[j ]) is said to be an
+inversion if these numbers are out of order, i.e., i < j but A[i]>A[j ]. Write a program to
+count the number of inversions in an array.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int A[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++)
+        cin >> A[i];
+
+    int count = 0;
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (A[i] > A[j]) {
+                count++;
+            }
+        }
+    }
+
+    cout << "Number of inversions = " << count;
+    return 0;
+}
+
+8) Write a program to count the total number of distinct elements in an array of
+length n.
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    int arr[n];
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    int distinct = 0;
+
+    for (int i = 0; i < n; i++) {
+        bool seen = false;
+
+        for (int j = 0; j < i; j++) {
+            if (arr[i] == arr[j]) {
+                seen = true;
+                break;
+            }
+        }
+
+        if (!seen) distinct++;
+    }
+
+    cout << "Total distinct elements = " << distinct;
+
+    return 0;
+}
