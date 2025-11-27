@@ -1,0 +1,369 @@
+1. Develop a menu driven program demonstrating the following operations on a Stack using array:
+(i) push(), (ii) pop(), (iii) isEmpty(), (iv) isFull(), (v) display(), and (vi) peek().
+
+#include <stdio.h>
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+int isEmpty() {
+    return top == -1;
+}
+
+int isFull() {
+    return top == MAX - 1;
+}
+
+void push(int x) {
+    if (isFull()) {
+        printf("Stack is Full!\n");
+    } else {
+        stack[++top] = x;
+        printf("%d pushed to stack.\n", x);
+    }
+}
+
+void pop() {
+    if (isEmpty()) {
+        printf("Stack is Empty!\n");
+    } else {
+        printf("Popped element: %d\n", stack[top--]);
+    }
+}
+
+void peek() {
+    if (isEmpty()) {
+        printf("Stack is Empty!\n");
+    } else {
+        printf("Top element: %d\n", stack[top]);
+    }
+}
+
+void display() {
+    if (isEmpty()) {
+        printf("Stack is Empty!\n");
+        return;
+    }
+    printf("Stack elements: ");
+    for (int i = top; i >= 0; i--) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- Stack Menu ---\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. isEmpty\n");
+        printf("6. isFull\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to push: ");
+                scanf("%d", &value);
+                push(value);
+                break;
+
+            case 2:
+                pop();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if (isEmpty()) printf("Stack is Empty.\n");
+                else printf("Stack is NOT Empty.\n");
+                break;
+
+            case 6:
+                if (isFull()) printf("Stack is Full.\n");
+                else printf("Stack is NOT Full.\n");
+                break;
+
+            case 7:
+                return 0;
+
+            default:
+                printf("Invalid Choice!\n");
+        }
+    }
+}
+
+
+
+-------------------------------------------------------------------------------------
+
+
+
+2. Given a string, reverse it using STACK. For example “DataStructure” should be output as
+“erutcurtSataD.”
+
+#include <stdio.h>
+#include <string.h>
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int main() {
+    char str[MAX];
+    
+    printf("Enter a string: ");
+    gets(str);  
+
+    int len = strlen(str);
+
+    for (int i = 0; i < len; i++) {
+        push(str[i]);
+    }
+
+    printf("Reversed string: ");
+    while (top != -1) {
+        printf("%c", pop());
+    }
+    
+    printf("\n");
+    return 0;
+}
+
+
+
+------------------------------------------------------------------------
+
+
+
+3. Write a program that checks if an expression has balanced parentheses.
+
+
+#include <stdio.h>
+#include <string.h>
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    if (top == -1) return '\0';
+    return stack[top--];
+}
+
+int isMatchingPair(char open, char close) {
+    if (open == '(' && close == ')') return 1;
+    if (open == '{' && close == '}') return 1;
+    if (open == '[' && close == ']') return 1;
+    return 0;
+}
+
+int isBalanced(char exp[]) {
+    for (int i = 0; exp[i] != '\0'; i++) {
+        char ch = exp[i];
+
+        
+        if (ch == '(' || ch == '{' || ch == '[') {
+            push(ch);
+        } 
+        
+        else if (ch == ')' || ch == '}' || ch == ']') {
+            if (top == -1)    
+                return 0;
+
+            char popped = pop();
+            if (!isMatchingPair(popped, ch))
+                return 0;     
+        }
+    }
+
+    // Finally stack must be empty
+    return (top == -1);
+}
+
+int main() {
+    char exp[MAX];
+
+    printf("Enter an expression: ");
+    gets(exp);
+
+    if (isBalanced(exp))
+        printf("Balanced Expression\n");
+    else
+        printf("Not Balanced\n");
+
+    return 0;
+}
+
+
+
+-------------------------------------------------------------------------------
+
+
+
+4. Write a program to convert an Infix expression into a Postfix expression.
+
+
+#include <stdio.h>
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char ch) {
+    stack[++top] = ch;
+}
+
+char pop() {
+    if (top == -1)
+        return '\0';
+    return stack[top--];
+}
+
+int isOperand(char ch) {
+    if ((ch >= 'a' && ch <= 'z') ||
+        (ch >= 'A' && ch <= 'Z') ||
+        (ch >= '0' && ch <= '9'))
+        return 1;
+    return 0;
+}
+
+int precedence(char op) {
+    if (op == '^')
+        return 3;
+    if (op == '*' || op == '/')
+        return 2;
+    if (op == '+' || op == '-')
+        return 1;
+    return 0;
+}
+
+int main() {
+    char infix[MAX], postfix[MAX];
+    int i = 0, j = 0;
+    char ch, temp;
+
+    printf("Enter infix expression: ");
+    gets(infix);  
+
+    while (infix[i] != '\0') {
+
+        ch = infix[i];
+
+        if (isOperand(ch)) {
+            postfix[j++] = ch;
+        }
+    
+        else if (ch == '(') {
+            push(ch);
+        }
+        
+        else if (ch == ')') {
+            while (top != -1 && stack[top] != '(') {
+                postfix[j++] = pop();
+            }
+            pop();  
+        }
+        
+        else {
+            while (top != -1 && precedence(stack[top]) >= precedence(ch)) {
+                postfix[j++] = pop();
+            }
+            push(ch);
+        }
+        i++;
+    }
+
+    
+    while (top != -1) {
+        postfix[j++] = pop();
+    }
+
+    postfix[j] = '\0';
+
+    printf("Postfix expression: %s\n", postfix);
+
+    return 0;
+}
+
+
+
+-----------------------------------------------------------------------------------------
+
+
+
+5. Write a program for the evaluation of a Postfix expression.
+
+#include <stdio.h>
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+void push(int x) {
+    stack[++top] = x;
+}
+
+int pop() {
+    return stack[top--];
+}
+
+int main() {
+    char postfix[MAX];
+    int i = 0, a, b, result;
+    char ch;
+
+    printf("Enter postfix expression: ");
+    gets(postfix);     
+
+    while (postfix[i] != '\0') {
+        ch = postfix[i];
+
+        if (ch >= '0' && ch <= '9') {
+            push(ch - '0');   
+        }
+
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            b = pop();    
+            a = pop();    
+
+            switch (ch) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': result = a / b; break;   
+            }
+            push(result);
+        }
+        i++;
+    }
+
+    result = pop();
+    printf("Result = %d\n", result);
+
+    return 0;
+}
