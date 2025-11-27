@@ -1,0 +1,647 @@
+1)Develop a menu driven program demonstrating the following operations on simple
+Queues: enqueue(), dequeue(), isEmpty(), isFull(), display(), and peek().
+
+
+#include <stdio.h>
+#define MAX 100
+
+int queue[MAX];
+int front = -1, rear = -1;
+
+int isEmpty() {
+    return (front == -1 && rear == -1);
+}
+
+int isFull() {
+    return (rear == MAX - 1);
+}
+
+void enqueue(int x) {
+    if (isFull()) {
+        printf("Queue is FULL!\n");
+        return;
+    }
+    if (isEmpty()) {
+        front = rear = 0;
+    } else {
+        rear++;
+    }
+    queue[rear] = x;
+    printf("%d inserted.\n", x);
+}
+
+void dequeue() {
+    if (isEmpty()) {
+        printf("Queue is EMPTY!\n");
+        return;
+    }
+    printf("%d removed.\n", queue[front]);
+
+    if (front == rear) {
+        front = rear = -1;
+    } else {
+        front++;
+    }
+}
+
+void peek() {
+    if (isEmpty()) {
+        printf("Queue is EMPTY!\n");
+    } else {
+        printf("Front element = %d\n", queue[front]);
+    }
+}
+
+void display() {
+    if (isEmpty()) {
+        printf("Queue is EMPTY!\n");
+        return;
+    }
+    printf("Queue elements: ");
+    for (int i = front; i <= rear; i++) {
+        printf("%d ", queue[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- MENU ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Check if Empty\n");
+        printf("6. Check if Full\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if (isEmpty()) printf("Queue is EMPTY.\n");
+                else printf("Queue is NOT empty.\n");
+                break;
+
+            case 6:
+                if (isFull()) printf("Queue is FULL.\n");
+                else printf("Queue is NOT full.\n");
+                break;
+
+            case 7:
+                return 0;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+}
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
+
+2) Develop a menu driven program demonstrating the following operations on Circular Queues:
+enqueue(), dequeue(), isEmpty(), isFull(), display(), and peek().
+
+
+#include <stdio.h>
+#define MAX 100
+
+int queue[MAX];
+int front = -1, rear = -1;
+
+int isEmpty() {
+    return (front == -1);
+}
+
+int isFull() {
+    return ((rear + 1) % MAX == front);
+}
+
+void enqueue(int x) {
+    if (isFull()) {
+        printf("Circular Queue is FULL!\n");
+        return;
+    }
+
+    if (isEmpty()) {
+        front = rear = 0;
+    } else {
+        rear = (rear + 1) % MAX;
+    }
+
+    queue[rear] = x;
+    printf("%d inserted.\n", x);
+}
+
+void dequeue() {
+    if (isEmpty()) {
+        printf("Circular Queue is EMPTY!\n");
+        return;
+    }
+
+    printf("%d removed.\n", queue[front]);
+
+    if (front == rear) {
+        front = rear = -1;  // Queue becomes empty
+    } else {
+        front = (front + 1) % MAX;
+    }
+}
+
+void peek() {
+    if (isEmpty()) {
+        printf("Circular Queue is EMPTY!\n");
+    } else {
+        printf("Front element = %d\n", queue[front]);
+    }
+}
+
+void display() {
+    if (isEmpty()) {
+        printf("Circular Queue is EMPTY!\n");
+        return;
+    }
+
+    printf("Circular Queue elements: ");
+    
+    int i = front;
+    while (1) {
+        printf("%d ", queue[i]);
+        if (i == rear) break;
+        i = (i + 1) % MAX;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- MENU (CIRCULAR QUEUE) ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Check if Empty\n");
+        printf("6. Check if Full\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if (isEmpty()) printf("Circular Queue is EMPTY.\n");
+                else printf("Circular Queue is NOT empty.\n");
+                break;
+
+            case 6:
+                if (isFull()) printf("Circular Queue is FULL.\n");
+                else printf("Circular Queue is NOT full.\n");
+                break;
+
+            case 7:
+                return 0;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+}
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+
+3) Write a program interleave the first half of the queue with second half.
+Sample I/P: 4 7 11 20 5 9 Sample O/P: 4 20 7 5 11 9
+
+
+#include <stdio.h>
+#define MAX 100
+
+int queue[MAX];
+int front = 0, rear = -1;
+
+void enqueue(int x) {
+    queue[++rear] = x;
+}
+
+int dequeue() {
+    return queue[front++];
+}
+
+int main() {
+    int n, i;
+
+    printf("Enter number of elements (even count): ");
+    scanf("%d", &n);
+
+    printf("Enter %d queue elements:\n", n);
+    for (i = 0; i < n; i++) {
+        int x;
+        scanf("%d", &x);
+        enqueue(x);
+    }
+
+    int half = n / 2;
+
+    // Temporary array for first half
+    int firstHalf[MAX];
+    
+    for (i = 0; i < half; i++)
+        firstHalf[i] = dequeue();
+
+    // Interleave first half with second half
+    printf("Interleaved Output: ");
+    for (i = 0; i < half; i++) {
+        printf("%d ", firstHalf[i]);   // from first half
+        printf("%d ", dequeue());      // from second half
+    }
+
+    printf("\n");
+    return 0;
+}
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
+
+4) Write a program to find first non-repeating character in a string using Queue. 
+Sample I/P: a a b c 
+Sample O/P: a -1 b b
+
+
+#include <stdio.h>
+
+#define MAX 100
+#define CHAR_RANGE 256   // for all possible ASCII chars
+
+// Simple queue for characters
+char q[MAX];
+int front = 0, rear = -1;
+
+int isEmpty() {
+    return front > rear;
+}
+
+void enqueue(char ch) {
+    if (rear < MAX - 1) {
+        q[++rear] = ch;
+    }
+}
+
+char dequeue() {
+    if (!isEmpty()) {
+        return q[front++];
+    }
+    return '\0'; // should not happen in our logic
+}
+
+int main() {
+    int n, i;
+    char ch;
+    int freq[CHAR_RANGE] = {0};   // frequency of each character
+
+    printf("Enter number of characters: ");
+    scanf("%d", &n);
+
+    printf("Enter %d characters (separated by space):\n", n);
+
+    for (i = 0; i < n; i++) {
+        scanf(" %c", &ch);       // space before %c to skip whitespace
+        freq[(unsigned char)ch]++;
+
+        // Add current character to queue
+        enqueue(ch);
+
+        // Remove characters from front until queue front is non-repeating
+        while (!isEmpty() && freq[(unsigned char)q[front]] > 1) {
+            dequeue();
+        }
+
+        // Print first non-repeating character so far
+        if (isEmpty()) {
+            printf("-1 ");
+        } else {
+            printf("%c ", q[front]);
+        }
+    }
+
+    printf("\n");
+    return 0;
+}
+
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+5) Write a program to implement a stack using (a) Two queues and (b) One Queue
+
+
+(a) Stack using Two Queues
+
+#include <stdio.h>
+#define MAX 100
+
+int q1[MAX], q2[MAX];
+int f1 = 0, r1 = -1;  
+int f2 = 0, r2 = -1;  
+
+int isEmptyQ1() { return f1 > r1; }
+int isEmptyQ2() { return f2 > r2; }
+
+int sizeQ1() { return isEmptyQ1() ? 0 : (r1 - f1 + 1); }
+
+void enqueueQ1(int x) {
+    if (r1 == MAX - 1) {
+        printf("Queue 1 overflow!\n");
+        return;
+    }
+    q1[++r1] = x;
+}
+
+void enqueueQ2(int x) {
+    if (r2 == MAX - 1) {
+        printf("Queue 2 overflow!\n");
+        return;
+    }
+    q2[++r2] = x;
+}
+
+int dequeueQ1() {
+    if (isEmptyQ1()) {
+        printf("Queue 1 underflow!\n");
+        return -1;
+    }
+    return q1[f1++];
+}
+
+int dequeueQ2() {
+    if (isEmptyQ2()) {
+        printf("Queue 2 underflow!\n");
+        return -1;
+    }
+    return q2[f2++];
+}
+
+void push(int x) {
+    enqueueQ1(x);
+    printf("%d pushed\n", x);
+}
+
+int pop() {
+    if (isEmptyQ1()) {
+        printf("Stack underflow!\n");
+        return -1;
+    }
+
+    int n = sizeQ1();
+    for (int i = 0; i < n - 1; i++) {
+        int val = dequeueQ1();
+        enqueueQ2(val);
+    }
+
+    int popped = dequeueQ1();
+
+    while (!isEmptyQ2()) {
+        int val = dequeueQ2();
+        enqueueQ1(val);
+    }
+
+    printf("%d popped\n", popped);
+    return popped;
+}
+
+int peek() {
+    if (isEmptyQ1()) {
+        printf("Stack is empty!\n");
+        return -1;
+    }
+
+    int n = sizeQ1();
+    int top = -1;
+ 
+    for (int i = 0; i < n; i++) {
+        int val = dequeueQ1();
+        enqueueQ2(val);
+        if (i == n - 1) top = val;  
+    }
+
+    while (!isEmptyQ2()) {
+        int val = dequeueQ2();
+        enqueueQ1(val);
+    }
+
+    printf("Top element = %d\n", top);
+    return top;
+}
+
+void display() {
+    if (isEmptyQ1()) {
+        printf("Stack is empty!\n");
+        return;
+    }
+
+    printf("Stack (bottom to top): ");
+
+    int n = sizeQ1();
+    for (int i = 0; i < n; i++) {
+        int val = dequeueQ1();
+        printf("%d ", val);
+        enqueueQ2(val);
+    }
+    printf("\n");
+
+    while (!isEmptyQ2()) {
+        int val = dequeueQ2();
+        enqueueQ1(val);
+    }
+}
+
+int main() {
+    int choice, x;
+
+    while (1) {
+        printf("\n--- Stack using TWO Queues ---\n");
+        printf("1. Push\n2. Pop\n3. Peek\n4. Display\n5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            printf("Enter value to push: ");
+            scanf("%d", &x);
+            push(x);
+            break;
+        case 2:
+            pop();
+            break;
+        case 3:
+            peek();
+            break;
+        case 4:
+            display();
+            break;
+        case 5:
+            return 0;
+        default:
+            printf("Invalid choice!\n");
+        }
+    }
+}
+
+
+
+(b) Stack using One Queue
+
+
+#include <stdio.h>
+#define MAX 100
+
+int q[MAX];
+int f = 0, r = -1;   
+
+int isEmptyQ() { return f > r; }
+
+int sizeQ() { return isEmptyQ() ? 0 : (r - f + 1); }
+
+void enqueueQ(int x) {
+    if (r == MAX - 1) {
+        printf("Queue overflow!\n");
+        return;
+    }
+    q[++r] = x;
+}
+
+int dequeueQ() {
+    if (isEmptyQ()) {
+        printf("Queue underflow!\n");
+        return -1;
+    }
+    return q[f++];
+}
+
+void push(int x) {
+    int i, s;
+    enqueueQ(x);             
+    s = sizeQ() - 1;         
+
+    for (i = 0; i < s; i++) {
+        int val = dequeueQ();
+        enqueueQ(val);
+    }
+    printf("%d pushed\n", x);
+}
+
+int pop() {
+    if (isEmptyQ()) {
+        printf("Stack underflow!\n");
+        return -1;
+    }
+    int popped = dequeueQ(); 
+    printf("%d popped\n", popped);
+    return popped;
+}
+
+int peek() {
+    if (isEmptyQ()) {
+        printf("Stack is empty!\n");
+        return -1;
+    }
+    printf("Top element = %d\n", q[f]);
+    return q[f];
+}
+
+void display() {
+    if (isEmptyQ()) {
+        printf("Stack is empty!\n");
+        return;
+    }
+
+    printf("Stack (top to bottom): ");
+    for (int i = f; i <= r; i++) {
+        printf("%d ", q[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, x;
+
+    while (1) {
+        printf("\n--- Stack using ONE Queue ---\n");
+        printf("1. Push\n2. Pop\n3. Peek\n4. Display\n5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1:
+            printf("Enter value to push: ");
+            scanf("%d", &x);
+            push(x);
+            break;
+        case 2:
+            pop();
+            break;
+        case 3:
+            peek();
+            break;
+        case 4:
+            display();
+            break;
+        case 5:
+            return 0;
+        default:
+            printf("Invalid choice!\n");
+        }
+    }
+}
+
