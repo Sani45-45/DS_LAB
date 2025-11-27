@@ -1,0 +1,596 @@
+1. Develop a menu driven program for the following operations on a Singly Linked List. 
+(a) Insertion at the beginning. 
+(b) Insertion at the end. 
+(c) Insertion in between (before or after a node having a specific value, say 'Insert a new Node 35 before/after the Node 30'). 
+(d) Deletion from the beginning. 
+(e) Deletion from the end. 
+(f) Deletion of a specific node, say 'Delete Node 60'). 
+(g) Search for a node and display its position from head. 
+(h) Display all the node values
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+void insertAtBeginning(int value);
+void insertAtEnd(int value);
+void insertBeforeValue(int key, int value);
+void insertAfterValue(int key, int value);
+void deleteFromBeginning();
+void deleteFromEnd();
+void deleteValue(int key);
+int  searchValue(int key);   // returns position (1-based), -1 if not found
+void displayList();
+
+int main() {
+    int choice, value, key, pos;
+
+    while (1) {
+        printf("\n---- Singly Linked List Menu ----\n");
+        printf("1. Insertion at the beginning\n");
+        printf("2. Insertion at the end\n");
+        printf("3. Insertion in between (before a value)\n");
+        printf("4. Insertion in between (after a value)\n");
+        printf("5. Deletion from the beginning\n");
+        printf("6. Deletion from the end\n");
+        printf("7. Deletion of a specific node (by value)\n");
+        printf("8. Search for a node (by value)\n");
+        printf("9. Display all node values\n");
+        printf("10. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert at beginning: ");
+                scanf("%d", &value);
+                insertAtBeginning(value);
+                break;
+
+            case 2:
+                printf("Enter value to insert at end: ");
+                scanf("%d", &value);
+                insertAtEnd(value);
+                break;
+
+            case 3:
+                printf("Enter value before which to insert: ");
+                scanf("%d", &key);
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertBeforeValue(key, value);
+                break;
+
+            case 4:
+                printf("Enter value after which to insert: ");
+                scanf("%d", &key);
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertAfterValue(key, value);
+                break;
+
+            case 5:
+                deleteFromBeginning();
+                break;
+
+            case 6:
+                deleteFromEnd();
+                break;
+
+            case 7:
+                printf("Enter value of node to delete: ");
+                scanf("%d", &key);
+                deleteValue(key);
+                break;
+
+            case 8:
+                printf("Enter value to search: ");
+                scanf("%d", &key);
+                pos = searchValue(key);
+                if (pos == -1)
+                    printf("Value %d not found in the list.\n", key);
+                else
+                    printf("Value %d found at position %d from head.\n", key, pos);
+                break;
+
+            case 9:
+                displayList();
+                break;
+
+            case 10:
+                printf("Exiting...\n");
+                // Free all remaining nodes (optional cleanup)
+                while (head != NULL) {
+                    deleteFromBeginning();
+                }
+                return 0;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+
+// (a) Insertion at the beginning
+void insertAtBeginning(int value) {
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
+    printf("Inserted %d at the beginning.\n", value);
+}
+
+// (b) Insertion at the end
+void insertAtEnd(int value) {
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node *temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+    printf("Inserted %d at the end.\n", value);
+}
+
+// (c) Insertion before a node having a specific value (first occurrence)
+void insertBeforeValue(int key, int value) {
+    // If list is empty
+    if (head == NULL) {
+        printf("List is empty. Cannot insert before %d.\n", key);
+        return;
+    }
+
+    // If the key is at the head
+    if (head->data == key) {
+        insertAtBeginning(value);
+        return;
+    }
+
+    struct Node *temp = head;
+    struct Node *prev = NULL;
+
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Value %d not found in the list.\n", key);
+        return;
+    }
+
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = temp;
+    prev->next = newNode;
+
+    printf("Inserted %d before %d.\n", value, key);
+}
+
+// (c) Insertion after a node having a specific value (first occurrence)
+void insertAfterValue(int key, int value) {
+    struct Node *temp = head;
+
+    while (temp != NULL && temp->data != key) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Value %d not found in the list.\n", key);
+        return;
+    }
+
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = temp->next;
+    temp->next = newNode;
+
+    printf("Inserted %d after %d.\n", value, key);
+}
+
+// (d) Deletion from the beginning
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+
+    struct Node *temp = head;
+    head = head->next;
+    printf("Deleted node with value %d from beginning.\n", temp->data);
+    free(temp);
+}
+
+// (e) Deletion from the end
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+
+    // If there is only one node
+    if (head->next == NULL) {
+        printf("Deleted node with value %d from end.\n", head->data);
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    struct Node *temp = head;
+    struct Node *prev = NULL;
+
+    while (temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    printf("Deleted node with value %d from end.\n", temp->data);
+    prev->next = NULL;
+    free(temp);
+}
+
+// (f) Deletion of a specific node by value (first occurrence)
+void deleteValue(int key) {
+    if (head == NULL) {
+        printf("List is empty. Nothing to delete.\n");
+        return;
+    }
+
+    // If the node to be deleted is the head
+    if (head->data == key) {
+        struct Node *temp = head;
+        head = head->next;
+        printf("Deleted node with value %d.\n", temp->data);
+        free(temp);
+        return;
+    }
+
+    struct Node *temp = head;
+    struct Node *prev = NULL;
+
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Value %d not found in the list.\n", key);
+        return;
+    }
+
+    prev->next = temp->next;
+    printf("Deleted node with value %d.\n", temp->data);
+    free(temp);
+}
+
+// (g) Search for a node and display its position from head (1-based index)
+int searchValue(int key) {
+    struct Node *temp = head;
+    int position = 1;
+
+    while (temp != NULL) {
+        if (temp->data == key)
+            return position;
+        temp = temp->next;
+        position++;
+    }
+    return -1;
+}
+
+// (h) Display all the node values
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node *temp = head;
+    printf("List: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+
+
+----------------------------------------------------------------------------------------
+
+
+
+2. Write a program to count the number of occurrences of a given key in a singly linked
+list and then delete all the occurrences.
+Input: Linked List : 1->2->1->2->1->3->1 , key: 1
+Output: Count: 4 , Updated Linked List: 2->2->3.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+void insertAtEnd(int value) {
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
+    struct Node *temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+}
+
+int deleteAllOccurrences(int key) {
+    int count = 0;
+
+    // Delete from beginning if matches
+    while (head != NULL && head->data == key) {
+        struct Node *temp = head;
+        head = head->next;
+        free(temp);
+        count++;
+    }
+
+    // Delete in the middle or end
+    struct Node *current = head;
+    struct Node *prev = NULL;
+
+    while (current != NULL) {
+        if (current->data == key) {
+            struct Node *temp = current;
+            prev->next = current->next;
+            current = current->next;
+            free(temp);
+            count++;
+        } else {
+            prev = current;
+            current = current->next;
+        }
+    }
+
+    return count;
+}
+
+void displayList() {
+    struct Node *temp = head;
+    if (temp == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+}
+
+int main() {
+    // Creating given list: 1->2->1->2->1->3->1
+    insertAtEnd(1);
+    insertAtEnd(2);
+    insertAtEnd(1);
+    insertAtEnd(2);
+    insertAtEnd(1);
+    insertAtEnd(3);
+    insertAtEnd(1);
+
+    int key = 1;
+
+    printf("Original List: ");
+    displayList();
+    printf("\n");
+
+    int count = deleteAllOccurrences(key);
+
+    printf("Count: %d\n", count);
+
+    printf("Updated Linked List: ");
+    displayList();
+    printf("\n");
+
+    return 0;
+}
+
+
+
+-------------------------------------------------------------------------------------
+
+
+
+3. Write a program to find the middle of a linked list.
+Input: 1->2->3->4->5
+Output: 3
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+void insertAtEnd(int value) {
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
+    struct Node *temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+}
+
+int findMiddle() {
+    struct Node *slow = head;
+    struct Node *fast = head;
+
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return -1;
+    }
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;         // moves 1 step
+        fast = fast->next->next;   // moves 2 steps
+    }
+
+    return slow->data;   // slow will be at middle node
+}
+
+void displayList() {
+    struct Node *temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+}
+
+int main() {
+    insertAtEnd(1);
+    insertAtEnd(2);
+    insertAtEnd(3);
+    insertAtEnd(4);
+    insertAtEnd(5);
+
+    printf("Linked List: ");
+    displayList();
+    printf("\n");
+
+    int middle = findMiddle();
+    printf("Middle element: %d\n", middle);
+
+    return 0;
+}
+
+
+
+-------------------------------------------------------------------------------------
+
+
+
+4. Write a program to reverse a linked list.
+Input: 1->2->3->4->NULL
+Output: 4->3->2->1->NULL
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *head = NULL;
+
+void insertAtEnd(int value) 
+{
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
+    struct Node *temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+}
+
+// Reverse the linked list
+void reverseList() {
+    struct Node *prev = NULL;
+    struct Node *curr = head;
+    struct Node *next = NULL;
+
+    while (curr != NULL) {
+        next = curr->next;     
+        curr->next = prev;     
+        prev = curr;           
+        curr = next;           
+    }
+
+    head = prev;               
+}
+
+void displayList() {
+    struct Node *temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    insertAtEnd(1);
+    insertAtEnd(2);
+    insertAtEnd(3);
+    insertAtEnd(4);
+
+    printf("Original List: ");
+    displayList();
+
+    reverseList();
+
+    printf("Reversed List: ");
+    displayList();
+
+    return 0;
+}
